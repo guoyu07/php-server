@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.19 on 2017-04-24.
+ * Generated for Laravel 5.4.21 on 2017-05-01.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -1354,13 +1354,13 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $command
          * @param array $parameters
-         * @return void 
+         * @return \Illuminate\Foundation\Bus\PendingDispatch 
          * @static 
          */
         public static function queue($command, $parameters = array())
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel            
-            \App\Console\Kernel::queue($command, $parameters);
+            return \App\Console\Kernel::queue($command, $parameters);
         }
         
         /**
@@ -1567,7 +1567,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the currently authenticated user.
          *
-         * @return \App\User|null 
+         * @return \App\Models\User|null 
          * @static 
          */
         public static function user()
@@ -1602,7 +1602,7 @@ namespace Illuminate\Support\Facades {
          * Log the given user ID into the application without sessions or cookies.
          *
          * @param mixed $id
-         * @return \App\User|false 
+         * @return \App\Models\User|false 
          * @static 
          */
         public static function onceUsingId($id)
@@ -1666,7 +1666,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param mixed $id
          * @param bool $remember
-         * @return \App\User|false 
+         * @return \App\Models\User|false 
          * @static 
          */
         public static function loginUsingId($id, $remember = false)
@@ -1713,7 +1713,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the last user we attempted to authenticate.
          *
-         * @return \App\User 
+         * @return \App\Models\User 
          * @static 
          */
         public static function getLastAttempted()
@@ -1838,7 +1838,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Return the currently cached user.
          *
-         * @return \App\User|null 
+         * @return \App\Models\User|null 
          * @static 
          */
         public static function getUser()
@@ -1906,7 +1906,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if the current user is authenticated.
          *
-         * @return \App\User 
+         * @return \App\Models\User 
          * @throws \Illuminate\Auth\AuthenticationException
          * @static 
          */
@@ -3210,27 +3210,94 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
-         * Get a schema builder instance for the connection.
+         * Begin a fluent query against a database collection.
          *
-         * @return \Illuminate\Database\Schema\MySqlBuilder 
+         * @param string $collection
+         * @return \Jenssegers\Mongodb\Query\Builder 
+         * @static 
+         */
+        public static function collection($collection)
+        {
+            return \Jenssegers\Mongodb\Connection::collection($collection);
+        }
+        
+        /**
+         * Begin a fluent query against a database collection.
+         *
+         * @param string $table
+         * @return \Jenssegers\Mongodb\Query\Builder 
+         * @static 
+         */
+        public static function table($table)
+        {
+            return \Jenssegers\Mongodb\Connection::table($table);
+        }
+        
+        /**
+         * Get a MongoDB collection.
+         *
+         * @param string $name
+         * @return \Jenssegers\Mongodb\Collection 
+         * @static 
+         */
+        public static function getCollection($name)
+        {
+            return \Jenssegers\Mongodb\Connection::getCollection($name);
+        }
+        
+        /**
+         * 
+         *
+         * @inheritdoc 
          * @static 
          */
         public static function getSchemaBuilder()
         {
-            return \Illuminate\Database\MySqlConnection::getSchemaBuilder();
+            return \Jenssegers\Mongodb\Connection::getSchemaBuilder();
         }
         
         /**
-         * Bind values to their parameters in the given statement.
+         * Get the MongoDB database object.
          *
-         * @param \PDOStatement $statement
-         * @param array $bindings
-         * @return void 
+         * @return \MongoDB\Database 
          * @static 
          */
-        public static function bindValues($statement, $bindings)
+        public static function getMongoDB()
         {
-            \Illuminate\Database\MySqlConnection::bindValues($statement, $bindings);
+            return \Jenssegers\Mongodb\Connection::getMongoDB();
+        }
+        
+        /**
+         * return MongoDB object.
+         *
+         * @return \MongoDB\Client 
+         * @static 
+         */
+        public static function getMongoClient()
+        {
+            return \Jenssegers\Mongodb\Connection::getMongoClient();
+        }
+        
+        /**
+         * 
+         *
+         * @inheritdoc 
+         * @static 
+         */
+        public static function getElapsedTime($start)
+        {
+            return \Jenssegers\Mongodb\Connection::getElapsedTime($start);
+        }
+        
+        /**
+         * 
+         *
+         * @inheritdoc 
+         * @static 
+         */
+        public static function getDriverName()
+        {
+            return \Jenssegers\Mongodb\Connection::getDriverName();
         }
         
         /**
@@ -3242,7 +3309,7 @@ namespace Illuminate\Support\Facades {
         public static function useDefaultQueryGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::useDefaultQueryGrammar();
+            \Jenssegers\Mongodb\Connection::useDefaultQueryGrammar();
         }
         
         /**
@@ -3254,7 +3321,7 @@ namespace Illuminate\Support\Facades {
         public static function useDefaultSchemaGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::useDefaultSchemaGrammar();
+            \Jenssegers\Mongodb\Connection::useDefaultSchemaGrammar();
         }
         
         /**
@@ -3266,20 +3333,7 @@ namespace Illuminate\Support\Facades {
         public static function useDefaultPostProcessor()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::useDefaultPostProcessor();
-        }
-        
-        /**
-         * Begin a fluent query against a database table.
-         *
-         * @param string $table
-         * @return \Illuminate\Database\Query\Builder 
-         * @static 
-         */
-        public static function table($table)
-        {
-            //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::table($table);
+            \Jenssegers\Mongodb\Connection::useDefaultPostProcessor();
         }
         
         /**
@@ -3291,7 +3345,7 @@ namespace Illuminate\Support\Facades {
         public static function query()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::query();
+            return \Jenssegers\Mongodb\Connection::query();
         }
         
         /**
@@ -3306,7 +3360,7 @@ namespace Illuminate\Support\Facades {
         public static function selectOne($query, $bindings = array(), $useReadPdo = true)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::selectOne($query, $bindings, $useReadPdo);
+            return \Jenssegers\Mongodb\Connection::selectOne($query, $bindings, $useReadPdo);
         }
         
         /**
@@ -3320,7 +3374,7 @@ namespace Illuminate\Support\Facades {
         public static function selectFromWriteConnection($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::selectFromWriteConnection($query, $bindings);
+            return \Jenssegers\Mongodb\Connection::selectFromWriteConnection($query, $bindings);
         }
         
         /**
@@ -3335,7 +3389,7 @@ namespace Illuminate\Support\Facades {
         public static function select($query, $bindings = array(), $useReadPdo = true)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::select($query, $bindings, $useReadPdo);
+            return \Jenssegers\Mongodb\Connection::select($query, $bindings, $useReadPdo);
         }
         
         /**
@@ -3350,7 +3404,7 @@ namespace Illuminate\Support\Facades {
         public static function cursor($query, $bindings = array(), $useReadPdo = true)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::cursor($query, $bindings, $useReadPdo);
+            return \Jenssegers\Mongodb\Connection::cursor($query, $bindings, $useReadPdo);
         }
         
         /**
@@ -3364,7 +3418,7 @@ namespace Illuminate\Support\Facades {
         public static function insert($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::insert($query, $bindings);
+            return \Jenssegers\Mongodb\Connection::insert($query, $bindings);
         }
         
         /**
@@ -3378,7 +3432,7 @@ namespace Illuminate\Support\Facades {
         public static function update($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::update($query, $bindings);
+            return \Jenssegers\Mongodb\Connection::update($query, $bindings);
         }
         
         /**
@@ -3392,7 +3446,7 @@ namespace Illuminate\Support\Facades {
         public static function delete($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::delete($query, $bindings);
+            return \Jenssegers\Mongodb\Connection::delete($query, $bindings);
         }
         
         /**
@@ -3406,7 +3460,7 @@ namespace Illuminate\Support\Facades {
         public static function statement($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::statement($query, $bindings);
+            return \Jenssegers\Mongodb\Connection::statement($query, $bindings);
         }
         
         /**
@@ -3420,7 +3474,7 @@ namespace Illuminate\Support\Facades {
         public static function affectingStatement($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::affectingStatement($query, $bindings);
+            return \Jenssegers\Mongodb\Connection::affectingStatement($query, $bindings);
         }
         
         /**
@@ -3433,7 +3487,7 @@ namespace Illuminate\Support\Facades {
         public static function unprepared($query)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::unprepared($query);
+            return \Jenssegers\Mongodb\Connection::unprepared($query);
         }
         
         /**
@@ -3446,7 +3500,21 @@ namespace Illuminate\Support\Facades {
         public static function pretend($callback)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::pretend($callback);
+            return \Jenssegers\Mongodb\Connection::pretend($callback);
+        }
+        
+        /**
+         * Bind values to their parameters in the given statement.
+         *
+         * @param \PDOStatement $statement
+         * @param array $bindings
+         * @return void 
+         * @static 
+         */
+        public static function bindValues($statement, $bindings)
+        {
+            //Method inherited from \Illuminate\Database\Connection            
+            \Jenssegers\Mongodb\Connection::bindValues($statement, $bindings);
         }
         
         /**
@@ -3459,7 +3527,7 @@ namespace Illuminate\Support\Facades {
         public static function prepareBindings($bindings)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::prepareBindings($bindings);
+            return \Jenssegers\Mongodb\Connection::prepareBindings($bindings);
         }
         
         /**
@@ -3474,7 +3542,7 @@ namespace Illuminate\Support\Facades {
         public static function logQuery($query, $bindings, $time = null)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::logQuery($query, $bindings, $time);
+            \Jenssegers\Mongodb\Connection::logQuery($query, $bindings, $time);
         }
         
         /**
@@ -3487,7 +3555,7 @@ namespace Illuminate\Support\Facades {
         public static function listen($callback)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::listen($callback);
+            \Jenssegers\Mongodb\Connection::listen($callback);
         }
         
         /**
@@ -3500,7 +3568,7 @@ namespace Illuminate\Support\Facades {
         public static function raw($value)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::raw($value);
+            return \Jenssegers\Mongodb\Connection::raw($value);
         }
         
         /**
@@ -3512,7 +3580,7 @@ namespace Illuminate\Support\Facades {
         public static function isDoctrineAvailable()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::isDoctrineAvailable();
+            return \Jenssegers\Mongodb\Connection::isDoctrineAvailable();
         }
         
         /**
@@ -3526,7 +3594,7 @@ namespace Illuminate\Support\Facades {
         public static function getDoctrineColumn($table, $column)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getDoctrineColumn($table, $column);
+            return \Jenssegers\Mongodb\Connection::getDoctrineColumn($table, $column);
         }
         
         /**
@@ -3538,7 +3606,7 @@ namespace Illuminate\Support\Facades {
         public static function getDoctrineSchemaManager()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getDoctrineSchemaManager();
+            return \Jenssegers\Mongodb\Connection::getDoctrineSchemaManager();
         }
         
         /**
@@ -3550,7 +3618,7 @@ namespace Illuminate\Support\Facades {
         public static function getDoctrineConnection()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getDoctrineConnection();
+            return \Jenssegers\Mongodb\Connection::getDoctrineConnection();
         }
         
         /**
@@ -3562,7 +3630,7 @@ namespace Illuminate\Support\Facades {
         public static function getPdo()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getPdo();
+            return \Jenssegers\Mongodb\Connection::getPdo();
         }
         
         /**
@@ -3574,7 +3642,7 @@ namespace Illuminate\Support\Facades {
         public static function getReadPdo()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getReadPdo();
+            return \Jenssegers\Mongodb\Connection::getReadPdo();
         }
         
         /**
@@ -3587,7 +3655,7 @@ namespace Illuminate\Support\Facades {
         public static function setPdo($pdo)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::setPdo($pdo);
+            return \Jenssegers\Mongodb\Connection::setPdo($pdo);
         }
         
         /**
@@ -3600,7 +3668,7 @@ namespace Illuminate\Support\Facades {
         public static function setReadPdo($pdo)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::setReadPdo($pdo);
+            return \Jenssegers\Mongodb\Connection::setReadPdo($pdo);
         }
         
         /**
@@ -3613,7 +3681,7 @@ namespace Illuminate\Support\Facades {
         public static function setReconnector($reconnector)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::setReconnector($reconnector);
+            return \Jenssegers\Mongodb\Connection::setReconnector($reconnector);
         }
         
         /**
@@ -3625,7 +3693,7 @@ namespace Illuminate\Support\Facades {
         public static function getName()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getName();
+            return \Jenssegers\Mongodb\Connection::getName();
         }
         
         /**
@@ -3638,19 +3706,7 @@ namespace Illuminate\Support\Facades {
         public static function getConfig($option = null)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getConfig($option);
-        }
-        
-        /**
-         * Get the PDO driver name.
-         *
-         * @return string 
-         * @static 
-         */
-        public static function getDriverName()
-        {
-            //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getDriverName();
+            return \Jenssegers\Mongodb\Connection::getConfig($option);
         }
         
         /**
@@ -3662,7 +3718,7 @@ namespace Illuminate\Support\Facades {
         public static function getQueryGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getQueryGrammar();
+            return \Jenssegers\Mongodb\Connection::getQueryGrammar();
         }
         
         /**
@@ -3675,7 +3731,7 @@ namespace Illuminate\Support\Facades {
         public static function setQueryGrammar($grammar)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::setQueryGrammar($grammar);
+            \Jenssegers\Mongodb\Connection::setQueryGrammar($grammar);
         }
         
         /**
@@ -3687,7 +3743,7 @@ namespace Illuminate\Support\Facades {
         public static function getSchemaGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getSchemaGrammar();
+            return \Jenssegers\Mongodb\Connection::getSchemaGrammar();
         }
         
         /**
@@ -3700,7 +3756,7 @@ namespace Illuminate\Support\Facades {
         public static function setSchemaGrammar($grammar)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::setSchemaGrammar($grammar);
+            \Jenssegers\Mongodb\Connection::setSchemaGrammar($grammar);
         }
         
         /**
@@ -3712,7 +3768,7 @@ namespace Illuminate\Support\Facades {
         public static function getPostProcessor()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getPostProcessor();
+            return \Jenssegers\Mongodb\Connection::getPostProcessor();
         }
         
         /**
@@ -3725,7 +3781,7 @@ namespace Illuminate\Support\Facades {
         public static function setPostProcessor($processor)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::setPostProcessor($processor);
+            \Jenssegers\Mongodb\Connection::setPostProcessor($processor);
         }
         
         /**
@@ -3737,7 +3793,7 @@ namespace Illuminate\Support\Facades {
         public static function getEventDispatcher()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getEventDispatcher();
+            return \Jenssegers\Mongodb\Connection::getEventDispatcher();
         }
         
         /**
@@ -3750,7 +3806,7 @@ namespace Illuminate\Support\Facades {
         public static function setEventDispatcher($events)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::setEventDispatcher($events);
+            \Jenssegers\Mongodb\Connection::setEventDispatcher($events);
         }
         
         /**
@@ -3762,7 +3818,7 @@ namespace Illuminate\Support\Facades {
         public static function pretending()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::pretending();
+            return \Jenssegers\Mongodb\Connection::pretending();
         }
         
         /**
@@ -3774,7 +3830,7 @@ namespace Illuminate\Support\Facades {
         public static function getQueryLog()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getQueryLog();
+            return \Jenssegers\Mongodb\Connection::getQueryLog();
         }
         
         /**
@@ -3786,7 +3842,7 @@ namespace Illuminate\Support\Facades {
         public static function flushQueryLog()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::flushQueryLog();
+            \Jenssegers\Mongodb\Connection::flushQueryLog();
         }
         
         /**
@@ -3798,7 +3854,7 @@ namespace Illuminate\Support\Facades {
         public static function enableQueryLog()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::enableQueryLog();
+            \Jenssegers\Mongodb\Connection::enableQueryLog();
         }
         
         /**
@@ -3810,7 +3866,7 @@ namespace Illuminate\Support\Facades {
         public static function disableQueryLog()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::disableQueryLog();
+            \Jenssegers\Mongodb\Connection::disableQueryLog();
         }
         
         /**
@@ -3822,7 +3878,7 @@ namespace Illuminate\Support\Facades {
         public static function logging()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::logging();
+            return \Jenssegers\Mongodb\Connection::logging();
         }
         
         /**
@@ -3834,7 +3890,7 @@ namespace Illuminate\Support\Facades {
         public static function getDatabaseName()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getDatabaseName();
+            return \Jenssegers\Mongodb\Connection::getDatabaseName();
         }
         
         /**
@@ -3847,7 +3903,7 @@ namespace Illuminate\Support\Facades {
         public static function setDatabaseName($database)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::setDatabaseName($database);
+            return \Jenssegers\Mongodb\Connection::setDatabaseName($database);
         }
         
         /**
@@ -3859,7 +3915,7 @@ namespace Illuminate\Support\Facades {
         public static function getTablePrefix()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getTablePrefix();
+            return \Jenssegers\Mongodb\Connection::getTablePrefix();
         }
         
         /**
@@ -3872,7 +3928,7 @@ namespace Illuminate\Support\Facades {
         public static function setTablePrefix($prefix)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::setTablePrefix($prefix);
+            \Jenssegers\Mongodb\Connection::setTablePrefix($prefix);
         }
         
         /**
@@ -3885,7 +3941,7 @@ namespace Illuminate\Support\Facades {
         public static function withTablePrefix($grammar)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::withTablePrefix($grammar);
+            return \Jenssegers\Mongodb\Connection::withTablePrefix($grammar);
         }
         
         /**
@@ -3899,7 +3955,7 @@ namespace Illuminate\Support\Facades {
         public static function resolverFor($driver, $callback)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::resolverFor($driver, $callback);
+            \Jenssegers\Mongodb\Connection::resolverFor($driver, $callback);
         }
         
         /**
@@ -3912,7 +3968,7 @@ namespace Illuminate\Support\Facades {
         public static function getResolver($driver)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::getResolver($driver);
+            return \Jenssegers\Mongodb\Connection::getResolver($driver);
         }
         
         /**
@@ -3927,7 +3983,7 @@ namespace Illuminate\Support\Facades {
         public static function transaction($callback, $attempts = 1)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::transaction($callback, $attempts);
+            return \Jenssegers\Mongodb\Connection::transaction($callback, $attempts);
         }
         
         /**
@@ -3940,7 +3996,7 @@ namespace Illuminate\Support\Facades {
         public static function beginTransaction()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::beginTransaction();
+            \Jenssegers\Mongodb\Connection::beginTransaction();
         }
         
         /**
@@ -3952,7 +4008,7 @@ namespace Illuminate\Support\Facades {
         public static function commit()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::commit();
+            \Jenssegers\Mongodb\Connection::commit();
         }
         
         /**
@@ -3965,7 +4021,7 @@ namespace Illuminate\Support\Facades {
         public static function rollBack($toLevel = null)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Illuminate\Database\MySqlConnection::rollBack($toLevel);
+            \Jenssegers\Mongodb\Connection::rollBack($toLevel);
         }
         
         /**
@@ -3977,7 +4033,7 @@ namespace Illuminate\Support\Facades {
         public static function transactionLevel()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Illuminate\Database\MySqlConnection::transactionLevel();
+            return \Jenssegers\Mongodb\Connection::transactionLevel();
         }
         
     }         
@@ -5755,7 +5811,8 @@ namespace Illuminate\Support\Facades {
          */
         public static function broker($name = null)
         {
-            return \Illuminate\Auth\Passwords\PasswordBrokerManager::broker($name);
+            //Method inherited from \Illuminate\Auth\Passwords\PasswordBrokerManager            
+            return \Jenssegers\Mongodb\Auth\PasswordBrokerManager::broker($name);
         }
         
         /**
@@ -5766,7 +5823,8 @@ namespace Illuminate\Support\Facades {
          */
         public static function getDefaultDriver()
         {
-            return \Illuminate\Auth\Passwords\PasswordBrokerManager::getDefaultDriver();
+            //Method inherited from \Illuminate\Auth\Passwords\PasswordBrokerManager            
+            return \Jenssegers\Mongodb\Auth\PasswordBrokerManager::getDefaultDriver();
         }
         
         /**
@@ -5778,7 +5836,8 @@ namespace Illuminate\Support\Facades {
          */
         public static function setDefaultDriver($name)
         {
-            \Illuminate\Auth\Passwords\PasswordBrokerManager::setDefaultDriver($name);
+            //Method inherited from \Illuminate\Auth\Passwords\PasswordBrokerManager            
+            \Jenssegers\Mongodb\Auth\PasswordBrokerManager::setDefaultDriver($name);
         }
         
     }         
@@ -9002,27 +9061,94 @@ namespace Illuminate\Support\Facades {
     class Schema {
         
         /**
-         * Determine if the given table exists.
+         * 
          *
-         * @param string $table
-         * @return bool 
+         * @inheritdoc 
          * @static 
          */
-        public static function hasTable($table)
+        public static function hasColumn($table, $column)
         {
-            return \Illuminate\Database\Schema\MySqlBuilder::hasTable($table);
+            return \Jenssegers\Mongodb\Schema\Builder::hasColumn($table, $column);
         }
         
         /**
-         * Get the column listing for a given table.
+         * 
          *
-         * @param string $table
-         * @return array 
+         * @inheritdoc 
          * @static 
          */
-        public static function getColumnListing($table)
+        public static function hasColumns($table, $columns)
         {
-            return \Illuminate\Database\Schema\MySqlBuilder::getColumnListing($table);
+            return \Jenssegers\Mongodb\Schema\Builder::hasColumns($table, $columns);
+        }
+        
+        /**
+         * Determine if the given collection exists.
+         *
+         * @param string $collection
+         * @return bool 
+         * @static 
+         */
+        public static function hasCollection($collection)
+        {
+            return \Jenssegers\Mongodb\Schema\Builder::hasCollection($collection);
+        }
+        
+        /**
+         * 
+         *
+         * @inheritdoc 
+         * @static 
+         */
+        public static function hasTable($collection)
+        {
+            return \Jenssegers\Mongodb\Schema\Builder::hasTable($collection);
+        }
+        
+        /**
+         * Modify a collection on the schema.
+         *
+         * @param string $collection
+         * @param \Closure $callback
+         * @return bool 
+         * @static 
+         */
+        public static function collection($collection, $callback)
+        {
+            return \Jenssegers\Mongodb\Schema\Builder::collection($collection, $callback);
+        }
+        
+        /**
+         * 
+         *
+         * @inheritdoc 
+         * @static 
+         */
+        public static function table($collection, $callback)
+        {
+            return \Jenssegers\Mongodb\Schema\Builder::table($collection, $callback);
+        }
+        
+        /**
+         * 
+         *
+         * @inheritdoc 
+         * @static 
+         */
+        public static function create($collection, $callback = null)
+        {
+            return \Jenssegers\Mongodb\Schema\Builder::create($collection, $callback);
+        }
+        
+        /**
+         * 
+         *
+         * @inheritdoc 
+         * @static 
+         */
+        public static function drop($collection)
+        {
+            return \Jenssegers\Mongodb\Schema\Builder::drop($collection);
         }
         
         /**
@@ -9035,35 +9161,7 @@ namespace Illuminate\Support\Facades {
         public static function defaultStringLength($length)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder            
-            \Illuminate\Database\Schema\MySqlBuilder::defaultStringLength($length);
-        }
-        
-        /**
-         * Determine if the given table has a given column.
-         *
-         * @param string $table
-         * @param string $column
-         * @return bool 
-         * @static 
-         */
-        public static function hasColumn($table, $column)
-        {
-            //Method inherited from \Illuminate\Database\Schema\Builder            
-            return \Illuminate\Database\Schema\MySqlBuilder::hasColumn($table, $column);
-        }
-        
-        /**
-         * Determine if the given table has given columns.
-         *
-         * @param string $table
-         * @param array $columns
-         * @return bool 
-         * @static 
-         */
-        public static function hasColumns($table, $columns)
-        {
-            //Method inherited from \Illuminate\Database\Schema\Builder            
-            return \Illuminate\Database\Schema\MySqlBuilder::hasColumns($table, $columns);
+            \Jenssegers\Mongodb\Schema\Builder::defaultStringLength($length);
         }
         
         /**
@@ -9077,48 +9175,20 @@ namespace Illuminate\Support\Facades {
         public static function getColumnType($table, $column)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder            
-            return \Illuminate\Database\Schema\MySqlBuilder::getColumnType($table, $column);
+            return \Jenssegers\Mongodb\Schema\Builder::getColumnType($table, $column);
         }
         
         /**
-         * Modify a table on the schema.
+         * Get the column listing for a given table.
          *
          * @param string $table
-         * @param \Closure $callback
-         * @return void 
+         * @return array 
          * @static 
          */
-        public static function table($table, $callback)
+        public static function getColumnListing($table)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder            
-            \Illuminate\Database\Schema\MySqlBuilder::table($table, $callback);
-        }
-        
-        /**
-         * Create a new table on the schema.
-         *
-         * @param string $table
-         * @param \Closure $callback
-         * @return void 
-         * @static 
-         */
-        public static function create($table, $callback)
-        {
-            //Method inherited from \Illuminate\Database\Schema\Builder            
-            \Illuminate\Database\Schema\MySqlBuilder::create($table, $callback);
-        }
-        
-        /**
-         * Drop a table from the schema.
-         *
-         * @param string $table
-         * @return void 
-         * @static 
-         */
-        public static function drop($table)
-        {
-            //Method inherited from \Illuminate\Database\Schema\Builder            
-            \Illuminate\Database\Schema\MySqlBuilder::drop($table);
+            return \Jenssegers\Mongodb\Schema\Builder::getColumnListing($table);
         }
         
         /**
@@ -9131,7 +9201,7 @@ namespace Illuminate\Support\Facades {
         public static function dropIfExists($table)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder            
-            \Illuminate\Database\Schema\MySqlBuilder::dropIfExists($table);
+            \Jenssegers\Mongodb\Schema\Builder::dropIfExists($table);
         }
         
         /**
@@ -9145,7 +9215,7 @@ namespace Illuminate\Support\Facades {
         public static function rename($from, $to)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder            
-            \Illuminate\Database\Schema\MySqlBuilder::rename($from, $to);
+            \Jenssegers\Mongodb\Schema\Builder::rename($from, $to);
         }
         
         /**
@@ -9157,7 +9227,7 @@ namespace Illuminate\Support\Facades {
         public static function enableForeignKeyConstraints()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder            
-            return \Illuminate\Database\Schema\MySqlBuilder::enableForeignKeyConstraints();
+            return \Jenssegers\Mongodb\Schema\Builder::enableForeignKeyConstraints();
         }
         
         /**
@@ -9169,7 +9239,7 @@ namespace Illuminate\Support\Facades {
         public static function disableForeignKeyConstraints()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder            
-            return \Illuminate\Database\Schema\MySqlBuilder::disableForeignKeyConstraints();
+            return \Jenssegers\Mongodb\Schema\Builder::disableForeignKeyConstraints();
         }
         
         /**
@@ -9181,7 +9251,7 @@ namespace Illuminate\Support\Facades {
         public static function getConnection()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder            
-            return \Illuminate\Database\Schema\MySqlBuilder::getConnection();
+            return \Jenssegers\Mongodb\Schema\Builder::getConnection();
         }
         
         /**
@@ -9194,7 +9264,7 @@ namespace Illuminate\Support\Facades {
         public static function setConnection($connection)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder            
-            return \Illuminate\Database\Schema\MySqlBuilder::setConnection($connection);
+            return \Jenssegers\Mongodb\Schema\Builder::setConnection($connection);
         }
         
         /**
@@ -9207,7 +9277,7 @@ namespace Illuminate\Support\Facades {
         public static function blueprintResolver($resolver)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder            
-            \Illuminate\Database\Schema\MySqlBuilder::blueprintResolver($resolver);
+            \Jenssegers\Mongodb\Schema\Builder::blueprintResolver($resolver);
         }
         
     }         
@@ -11445,6 +11515,508 @@ namespace Illuminate\Support\Facades {
     }         
 }
     
+namespace Jenssegers\Mongodb\Eloquent {
+
+    class Model {
+        
+    }         
+}
+    
+namespace Toplan\PhpSms\Facades {
+
+    class Sms {
+        
+        /**
+         * Bootstrap the task.
+         *
+         * @static 
+         */
+        public static function bootstrap()
+        {
+            return \Toplan\PhpSms\Sms::bootstrap();
+        }
+        
+        /**
+         * Get the task instance.
+         *
+         * @return \Toplan\PhpSms\Task 
+         * @static 
+         */
+        public static function getTask()
+        {
+            return \Toplan\PhpSms\Sms::getTask();
+        }
+        
+        /**
+         * Get the agent instance by name.
+         *
+         * @param string $name
+         * @param array $options
+         * @throws PhpSmsException
+         * @return mixed 
+         * @static 
+         */
+        public static function getAgent($name, $options = array())
+        {
+            return \Toplan\PhpSms\Sms::getAgent($name, $options);
+        }
+        
+        /**
+         * Whether has the specified agent.
+         *
+         * @param string $name
+         * @return bool 
+         * @static 
+         */
+        public static function hasAgent($name)
+        {
+            return \Toplan\PhpSms\Sms::hasAgent($name);
+        }
+        
+        /**
+         * Set or get the dispatch scheme.
+         *
+         * @param mixed $name
+         * @param mixed $scheme
+         * @return mixed 
+         * @static 
+         */
+        public static function scheme($name = null, $scheme = null)
+        {
+            return \Toplan\PhpSms\Sms::scheme($name, $scheme);
+        }
+        
+        /**
+         * Set or get the configuration information.
+         *
+         * @param mixed $name
+         * @param mixed $config
+         * @param bool $override
+         * @throws PhpSmsException
+         * @return array 
+         * @static 
+         */
+        public static function config($name = null, $config = null, $override = false)
+        {
+            return \Toplan\PhpSms\Sms::config($name, $config, $override);
+        }
+        
+        /**
+         * Tear down agent use scheme and prepare to create and start a new task,
+         * so before do it must destroy old task instance.
+         *
+         * @static 
+         */
+        public static function cleanScheme()
+        {
+            return \Toplan\PhpSms\Sms::cleanScheme();
+        }
+        
+        /**
+         * Tear down all the configuration information of agent.
+         *
+         * @static 
+         */
+        public static function cleanConfig()
+        {
+            return \Toplan\PhpSms\Sms::cleanConfig();
+        }
+        
+        /**
+         * Create a instance for send sms,
+         * you can also set templates or content at the same time.
+         *
+         * @param mixed $agentName
+         * @param mixed $tempId
+         * @return \Toplan\PhpSms\Sms 
+         * @static 
+         */
+        public static function make($agentName = null, $tempId = null)
+        {
+            return \Toplan\PhpSms\Sms::make($agentName, $tempId);
+        }
+        
+        /**
+         * Create a instance for send voice verify code,
+         * you can also set verify code at the same time.
+         *
+         * @param int|string|null $code
+         * @return \Toplan\PhpSms\Sms 
+         * @static 
+         */
+        public static function voice($code = null)
+        {
+            return \Toplan\PhpSms\Sms::voice($code);
+        }
+        
+        /**
+         * Set whether to use the queue system,
+         * and define how to use it.
+         *
+         * @param mixed $enable
+         * @param mixed $handler
+         * @return bool 
+         * @static 
+         */
+        public static function queue($enable = null, $handler = null)
+        {
+            return \Toplan\PhpSms\Sms::queue($enable, $handler);
+        }
+        
+        /**
+         * Set the recipient`s mobile number.
+         *
+         * @param string $mobile
+         * @return $this 
+         * @static 
+         */
+        public static function to($mobile)
+        {
+            return \Toplan\PhpSms\Sms::to($mobile);
+        }
+        
+        /**
+         * Set the sms content.
+         *
+         * @param string $content
+         * @return $this 
+         * @static 
+         */
+        public static function content($content)
+        {
+            return \Toplan\PhpSms\Sms::content($content);
+        }
+        
+        /**
+         * Set the template ids.
+         *
+         * @param mixed $name
+         * @param mixed $tempId
+         * @return $this 
+         * @static 
+         */
+        public static function template($name, $tempId = null)
+        {
+            return \Toplan\PhpSms\Sms::template($name, $tempId);
+        }
+        
+        /**
+         * Set the template data.
+         *
+         * @param mixed $name
+         * @param mixed $value
+         * @return $this 
+         * @static 
+         */
+        public static function data($name, $value = null)
+        {
+            return \Toplan\PhpSms\Sms::data($name, $value);
+        }
+        
+        /**
+         * Set the first agent.
+         *
+         * @param string $name
+         * @return $this 
+         * @static 
+         */
+        public static function agent($name)
+        {
+            return \Toplan\PhpSms\Sms::agent($name);
+        }
+        
+        /**
+         * Start send.
+         * 
+         * If call with a `true` parameter, this system will immediately start request to send sms whatever whether to use the queue.
+         * if the current instance has pushed to the queue, you can recall this method in queue system without any parameter,
+         * so this mechanism in order to make you convenient to use this method in queue system.
+         *
+         * @param bool $immediately
+         * @return mixed 
+         * @static 
+         */
+        public static function send($immediately = false)
+        {
+            return \Toplan\PhpSms\Sms::send($immediately);
+        }
+        
+        /**
+         * Push to the queue system.
+         *
+         * @throws \Exception | PhpSmsException
+         * @return mixed 
+         * @static 
+         */
+        public static function push()
+        {
+            return \Toplan\PhpSms\Sms::push();
+        }
+        
+        /**
+         * Get all of the data.
+         *
+         * @param null|string $key
+         * @return mixed 
+         * @static 
+         */
+        public static function all($key = null)
+        {
+            return \Toplan\PhpSms\Sms::all($key);
+        }
+        
+        /**
+         * The alias of `all` method.
+         *
+         * @param null|string $key
+         * @return mixed 
+         * @static 
+         */
+        public static function getData($key = null)
+        {
+            return \Toplan\PhpSms\Sms::getData($key);
+        }
+        
+    }         
+}
+    
+namespace Toplan\Sms\Facades {
+
+    class SmsManager {
+        
+        /**
+         * 验证是否可发送
+         *
+         * @return array 
+         * @static 
+         */
+        public static function validateSendable()
+        {
+            return \Toplan\Sms\SmsManager::validateSendable();
+        }
+        
+        /**
+         * 验证数据
+         *
+         * @param mixed $input
+         * @param \Closure|null $validation
+         * @return array 
+         * @static 
+         */
+        public static function validateFields($input = null, $validation = null)
+        {
+            return \Toplan\Sms\SmsManager::validateFields($input, $validation);
+        }
+        
+        /**
+         * 请求验证码短信
+         *
+         * @return array 
+         * @static 
+         */
+        public static function requestVerifySms()
+        {
+            return \Toplan\Sms\SmsManager::requestVerifySms();
+        }
+        
+        /**
+         * 请求语音验证码
+         *
+         * @return array 
+         * @static 
+         */
+        public static function requestVoiceVerify()
+        {
+            return \Toplan\Sms\SmsManager::requestVoiceVerify();
+        }
+        
+        /**
+         * 获取当前的发送状态(非持久化的)
+         *
+         * @param string|int|null $key
+         * @param mixed $default
+         * @return mixed 
+         * @static 
+         */
+        public static function state($key = null, $default = null)
+        {
+            return \Toplan\Sms\SmsManager::state($key, $default);
+        }
+        
+        /**
+         * 获取客户端数据
+         *
+         * @param string|int|null $key
+         * @param mixed $default
+         * @return mixed 
+         * @static 
+         */
+        public static function input($key = null, $default = null)
+        {
+            return \Toplan\Sms\SmsManager::input($key, $default);
+        }
+        
+        /**
+         * 更新发送状态
+         *
+         * @param string|array $name
+         * @param mixed $value
+         * @static 
+         */
+        public static function updateState($name, $value = null)
+        {
+            return \Toplan\Sms\SmsManager::updateState($name, $value);
+        }
+        
+        /**
+         * 从存储器中获取发送状态
+         *
+         * @param string|null $name
+         * @return array 
+         * @static 
+         */
+        public static function retrieveState($name = null)
+        {
+            return \Toplan\Sms\SmsManager::retrieveState($name);
+        }
+        
+        /**
+         * 从存储器中删除发送状态
+         *
+         * @static 
+         */
+        public static function forgetState()
+        {
+            return \Toplan\Sms\SmsManager::forgetState();
+        }
+        
+        /**
+         * 设置多少秒后才能再次请求
+         *
+         * @param int $interval
+         * @return int 
+         * @static 
+         */
+        public static function setCanResendAfter($interval)
+        {
+            return \Toplan\Sms\SmsManager::setCanResendAfter($interval);
+        }
+        
+        /**
+         * 从存储器中获取可再次发送的截止时间
+         *
+         * @return int 
+         * @static 
+         */
+        public static function getCanResendTime()
+        {
+            return \Toplan\Sms\SmsManager::getCanResendTime();
+        }
+        
+        /**
+         * 存储指定字段的指定名称的动态验证规则
+         *
+         * @param string $field
+         * @param string $name
+         * @param string|null $rule
+         * @throws LaravelSmsException
+         * @static 
+         */
+        public static function storeRule($field, $name, $rule = null)
+        {
+            return \Toplan\Sms\SmsManager::storeRule($field, $name, $rule);
+        }
+        
+        /**
+         * 从存储器中获取指定字段的指定名称的动态验证规则
+         *
+         * @param string $field
+         * @param string|null $name
+         * @return string|null 
+         * @static 
+         */
+        public static function retrieveRule($field, $name = null)
+        {
+            return \Toplan\Sms\SmsManager::retrieveRule($field, $name);
+        }
+        
+        /**
+         * 从存储中获取指定字段的所有验证规则
+         *
+         * @param string $field
+         * @return array 
+         * @static 
+         */
+        public static function retrieveRules($field)
+        {
+            return \Toplan\Sms\SmsManager::retrieveRules($field);
+        }
+        
+        /**
+         * 从存储器中删除指定字段的指定名称的动态验证规则
+         *
+         * @param string $field
+         * @param string|null $name
+         * @static 
+         */
+        public static function forgetRule($field, $name = null)
+        {
+            return \Toplan\Sms\SmsManager::forgetRule($field, $name);
+        }
+        
+        /**
+         * 从存储中获取指定字段的所有验证规则
+         *
+         * @param string $field
+         * @return array 
+         * @static 
+         */
+        public static function forgetRules($field)
+        {
+            return \Toplan\Sms\SmsManager::forgetRules($field);
+        }
+        
+        /**
+         * 从存储器中获取用户的所有数据
+         *
+         * @return array 
+         * @static 
+         */
+        public static function retrieveAllData()
+        {
+            return \Toplan\Sms\SmsManager::retrieveAllData();
+        }
+        
+        /**
+         * 合成结果数组
+         *
+         * @param bool $pass
+         * @param string $type
+         * @param string $message
+         * @param array $data
+         * @return array 
+         * @static 
+         */
+        public static function generateResult($pass, $type, $message = '', $data = array())
+        {
+            return \Toplan\Sms\SmsManager::generateResult($pass, $type, $message, $data);
+        }
+        
+        /**
+         * 序列化闭包
+         *
+         * @param \Closure $closure
+         * @return string 
+         * @static 
+         */
+        public static function closure($closure)
+        {
+            return \Toplan\Sms\SmsManager::closure($closure);
+        }
+        
+    }         
+}
+    
     
 namespace {
 
@@ -13482,6 +14054,12 @@ namespace {
             return \Illuminate\Database\Query\Builder::macroCall($method, $parameters);
         }
         }
+    
+    class Moloquent extends \Jenssegers\Mongodb\Eloquent\Model {}
+    
+    class PhpSms extends \Toplan\PhpSms\Facades\Sms {}
+    
+    class SmsManager extends \Toplan\Sms\Facades\SmsManager {}
     
 }
 

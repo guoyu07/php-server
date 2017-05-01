@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use SmsManager;
 
 class RegisterController extends Controller
 {
@@ -47,11 +48,20 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+        $validator = Validator::make($data, [
+            'mobile' => 'required|zh_mobile',
+            'verifyCode' => 'required|verify_code',
             'password' => 'required|string|min:6|confirmed',
+        ], [], [
+            'mobile' => '手机号码',
+            'verifyCode' => '验证码',
+            'password' => '密码',
         ]);
+        if ($validator->fails()) {
+            //验证失败后建议清空存储的发送状态，防止用户重复试错
+            SmsManager::forgetState();
+        }
+        return $validator;
     }
 
     /**
@@ -62,9 +72,9 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+
         return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'mobile' => $data['mobile'],
             'password' => bcrypt($data['password']),
         ]);
     }
